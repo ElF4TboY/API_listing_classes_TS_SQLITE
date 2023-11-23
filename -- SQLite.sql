@@ -7,3 +7,5 @@ CREATE TABLE classroom
 
 INSERT INTO classroom (name) VALUES
   ("Classe 1");
+
+DROP TABLE status;

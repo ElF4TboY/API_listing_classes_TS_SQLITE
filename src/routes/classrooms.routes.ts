@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import { validate } from "class-validator";
 
 import classroomServices from "../services/classrooms";
 
@@ -8,9 +7,8 @@ const router = express.Router();
 router.post("/", async (req: Request, res: Response) => {
   try {
     const newClassroom = await classroomServices.createClassroom(req.body);
-    const errors = await validate(newClassroom);
 
-    if (errors.length > 0) return res.status(422).send({ errors });
+    if (Array.isArray(newClassroom)) return res.status(422).send(newClassroom);
 
     res.status(200).send(newClassroom);
   } catch (e: any) {

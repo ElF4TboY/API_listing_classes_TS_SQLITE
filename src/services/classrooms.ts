@@ -1,9 +1,13 @@
 import Classroom from "../database/entities/Classroom";
+import { validate } from "class-validator";
 
 export default class classroomServices {
   static createClassroom = async (userRequest: any) => {
     try {
       const newClassroom = await Classroom.create(userRequest);
+      const errors = await validate(newClassroom);
+
+      if (errors.length > 0) return errors;
 
       return await newClassroom.save();
     } catch (e: any) {

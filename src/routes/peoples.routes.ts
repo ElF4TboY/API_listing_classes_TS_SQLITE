@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import { validate } from "class-validator";
 
 import peopleServices from "../services/people";
 
@@ -8,9 +7,8 @@ const router = express.Router();
 router.post("/", async (req: Request, res: Response) => {
   try {
     const newPeople = await peopleServices.createPeople(req.body);
-    const errors = await validate(newPeople);
 
-    if (errors.length > 0) return res.status(422).send({ errors });
+    if (Array.isArray(newPeople)) return res.status(422).send(newPeople);
 
     res.status(200).send(newPeople);
   } catch (e: any) {
@@ -43,17 +41,15 @@ router.get("/:id", async (req: Request, res: Response) => {
 
 router.patch("/:id", async (req: Request, res: Response) => {
   try {
-    const findOnePerson = await peopleServices.getOnePerson(req.params.id);
-
-    if (!findOnePerson) return res.status(404).send("Student not found");
-
     const updateOnePerson = await peopleServices.updateOnePerson(
-      findOnePerson,
+      req.params.id,
       req.body
     );
-    const errors = await validate(updateOnePerson);
 
-    if (errors.length > 0) return res.status(422).send({ errors });
+    if (!updateOnePerson) return res.sendStatus(404);
+
+    if (Array.isArray(updateOnePerson))
+      return res.status(422).send(updateOnePerson);
 
     res.status(200).send(updateOnePerson);
   } catch (e: any) {
@@ -63,13 +59,11 @@ router.patch("/:id", async (req: Request, res: Response) => {
 
 router.delete("/:id", async (req: Request, res: Response) => {
   try {
-    const findOnePersone = await peopleServices.getOnePerson(req.params.id);
-
-    if (!findOnePersone) return res.status(404).send("Student not found");
-
-    const deleteOnePerson = await peopleServices.deleteOnePerson(
-      findOnePersone
+    const deleteOneClassroom = await peopleServices.deleteOnePerson(
+      req.params.id
     );
+
+    if (!deleteOneClassroom) return res.sendStatus(404);
 
     res.sendStatus(204);
   } catch (e: any) {
