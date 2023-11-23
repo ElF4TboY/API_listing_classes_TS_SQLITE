@@ -30,9 +30,10 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.get("/:id", async (req: Request, res: Response) => {
   try {
-    const onePerson = await peopleServices.getOnePerson(req.params.id);
+    const onePerson: any = await peopleServices.getOnePerson(req.params.id);
 
-    if (!onePerson) return res.status(404).send("Student not found");
+    if (onePerson?.length === 0)
+      return res.status(404).send("Student not found");
 
     res.status(200).send(onePerson);
   } catch (e: any) {

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const newClassroom = await classroomServices.createClassroom(req.body, res);
+    const newClassroom = await classroomServices.createClassroom(req.body);
     const errors = await validate(newClassroom);
 
     if (errors.length > 0) return res.status(422).send({ errors });
@@ -20,9 +20,24 @@ router.post("/", async (req: Request, res: Response) => {
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const allClassroom = await classroomServices.getAllClassrooms(res);
+    const allClassroom = await classroomServices.getAllClassrooms();
 
     res.status(500).send(allClassroom);
+  } catch (e: any) {
+    res.status(500).send(e.message);
+  }
+});
+
+router.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const oneClassroom: any = await classroomServices.getOneClassroom(
+      req.params.id
+    );
+
+    if (oneClassroom?.length === 0)
+      return res.status(404).send("Classroom not found");
+
+    res.status(200).send(oneClassroom);
   } catch (e: any) {
     res.status(500).send(e.message);
   }
@@ -31,8 +46,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   try {
     const deleteOneClassroom = await classroomServices.deleteOneClassroom(
-      req.params.id,
-      res
+      req.params.id
     );
 
     if (!deleteOneClassroom) return res.sendStatus(404);

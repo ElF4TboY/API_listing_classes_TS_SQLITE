@@ -27,7 +27,14 @@ export default class peopleServices {
 
   static getOnePerson = async (userId: string) => {
     try {
-      const onePerson = await People.findOneBy({ id: parseInt(userId, 10) });
+      const onePerson = await People.find({
+        relations: {
+          classrooms: true,
+        },
+        where: {
+          id: parseInt(userId, 10),
+        },
+      });
 
       return onePerson;
     } catch (e: any) {
