@@ -13,7 +13,11 @@ export default class peopleServices {
 
   static getAllPeople = async () => {
     try {
-      const allPeople = await People.find();
+      const allPeople = await People.find({
+        relations: {
+          classrooms: true,
+        },
+      });
 
       return allPeople;
     } catch (e: any) {

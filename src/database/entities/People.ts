@@ -1,5 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Length } from "class-validator";
+
+import Classroom from "./Classroom";
 
 @Entity()
 export default class People extends BaseEntity {
@@ -18,4 +26,7 @@ export default class People extends BaseEntity {
   })
   @Column({ length: 150 })
   lastname: string;
+
+  @ManyToMany(() => Classroom, (classroom) => classroom.peoples)
+  classrooms: Classroom[];
 }

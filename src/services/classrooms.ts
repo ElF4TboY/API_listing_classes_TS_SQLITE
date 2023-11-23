@@ -13,7 +13,11 @@ export default class classroomServices {
 
   static getAllClassrooms = async (res: any) => {
     try {
-      const allClassroom = await Classroom.find();
+      const allClassroom = await Classroom.find({
+        relations: {
+          peoples: true,
+        },
+      });
 
       return allClassroom;
     } catch (e: any) {
