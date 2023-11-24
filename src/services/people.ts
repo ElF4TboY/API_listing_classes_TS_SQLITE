@@ -19,7 +19,7 @@ export default class peopleServices {
     try {
       const allPeople = await People.find({
         relations: {
-          classrooms: true,
+          status: true,
         },
       });
 
@@ -34,6 +34,10 @@ export default class peopleServices {
       const onePerson = await People.find({
         relations: {
           classrooms: true,
+          status: true,
+          scienceMark: true,
+          frenchMark: true,
+          mathMark: true,
         },
         where: {
           id: parseInt(userId, 10),

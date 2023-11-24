@@ -47,7 +47,6 @@ router.patch("/:id", async (req: Request, res: Response) => {
     );
 
     if (!updateOnePerson) return res.sendStatus(404);
-
     if (Array.isArray(updateOnePerson))
       return res.status(422).send(updateOnePerson);
 

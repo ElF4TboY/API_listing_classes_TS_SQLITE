@@ -20,7 +20,7 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     const allClassroom = await classroomServices.getAllClassrooms();
 
-    res.status(500).send(allClassroom);
+    res.status(200).send(allClassroom);
   } catch (e: any) {
     res.status(500).send(e.message);
   }

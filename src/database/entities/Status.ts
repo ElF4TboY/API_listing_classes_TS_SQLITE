@@ -1,5 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Length } from "class-validator";
+
+import People from "./People";
 
 @Entity()
 export default class Status extends BaseEntity {
@@ -11,4 +20,8 @@ export default class Status extends BaseEntity {
   })
   @Column({ length: 100 })
   category: string;
+
+  @JoinTable()
+  @ManyToMany(() => People, (people) => people.status)
+  peoples: People[];
 }

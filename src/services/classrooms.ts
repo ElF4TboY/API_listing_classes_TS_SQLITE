@@ -17,11 +17,7 @@ export default class classroomServices {
 
   static getAllClassrooms = async () => {
     try {
-      const allClassroom = await Classroom.find({
-        relations: {
-          peoples: true,
-        },
-      });
+      const allClassroom = await Classroom.find();
 
       return allClassroom;
     } catch (e: any) {
@@ -46,7 +42,7 @@ export default class classroomServices {
     }
   };
 
-  static deleteOneClassroom = async (userRequest: any) => {
+  static deleteOneClassroom = async (userRequest: string) => {
     try {
       const deleteOne = await Classroom.findOneBy({
         id: parseInt(userRequest, 10),
