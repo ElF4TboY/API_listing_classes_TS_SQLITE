@@ -1,5 +1,4 @@
 import express, { Request, Response } from "express";
-import { validate } from "class-validator";
 
 import classroomServices from "../services/classrooms";
 
@@ -7,10 +6,9 @@ const router = express.Router();
 
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const newClassroom = await classroomServices.createClassroom(req.body, res);
-    const errors = await validate(newClassroom);
+    const newClassroom = await classroomServices.createClassroom(req.body);
 
-    if (errors.length > 0) return res.status(422).send({ errors });
+    if (Array.isArray(newClassroom)) return res.status(422).send(newClassroom);
 
     res.status(200).send(newClassroom);
   } catch (e: any) {
@@ -20,9 +18,24 @@ router.post("/", async (req: Request, res: Response) => {
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const allClassroom = await classroomServices.getAllClassrooms(res);
+    const allClassroom = await classroomServices.getAllClassrooms();
 
-    res.status(500).send(allClassroom);
+    res.status(200).send(allClassroom);
+  } catch (e: any) {
+    res.status(500).send(e.message);
+  }
+});
+
+router.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const oneClassroom: any = await classroomServices.getOneClassroom(
+      req.params.id
+    );
+
+    if (oneClassroom?.length === 0)
+      return res.status(404).send("Classroom not found");
+
+    res.status(200).send(oneClassroom);
   } catch (e: any) {
     res.status(500).send(e.message);
   }
@@ -31,8 +44,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   try {
     const deleteOneClassroom = await classroomServices.deleteOneClassroom(
-      req.params.id,
-      res
+      req.params.id
     );
 
     if (!deleteOneClassroom) return res.sendStatus(404);

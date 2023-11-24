@@ -1,5 +1,19 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Length } from "class-validator";
+
+import Classroom from "./Classroom";
+import Status from "./Status";
+import ScienceMark from "./ScienceMark";
+import FrenchMark from "./FrenchMark";
+import MathMark from "./MathMark";
 
 @Entity()
 export default class People extends BaseEntity {
@@ -18,4 +32,20 @@ export default class People extends BaseEntity {
   })
   @Column({ length: 150 })
   lastname: string;
+
+  @ManyToMany(() => Classroom, (classroom) => classroom.peoples)
+  classrooms: Classroom[];
+
+  @JoinTable()
+  @ManyToMany(() => Status, (status) => status.peoples, { cascade: true })
+  status: Status[];
+
+  @OneToMany(() => ScienceMark, (science) => science.students)
+  scienceMark: ScienceMark[];
+
+  @OneToMany(() => FrenchMark, (french) => french.students)
+  frenchMark: FrenchMark[];
+
+  @OneToMany(() => MathMark, (math) => math.students)
+  mathMark: MathMark[];
 }
